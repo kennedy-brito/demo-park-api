@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")
@@ -24,6 +26,13 @@ public class UserController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id){
         User user = userService.findById(id);
+
+        return ResponseEntity.ok(user);
+    }
+
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestBody User user){
+        user = userService.changePassword(id, user.getPassword());
 
         return ResponseEntity.ok(user);
     }
