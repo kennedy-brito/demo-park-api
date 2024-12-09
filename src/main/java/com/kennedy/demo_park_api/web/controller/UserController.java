@@ -37,4 +37,10 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping
+    public ResponseEntity<List<User>> findAll(){
+        List<User> user = userService.findAll();
+
+        return ResponseEntity.ok(user);
+    }
 }
