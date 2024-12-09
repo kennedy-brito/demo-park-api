@@ -5,10 +5,7 @@ import com.kennedy.demo_park_api.servicies.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,4 +20,12 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<User> getById(@PathVariable Long id){
+        User user = userService.findById(id);
+
+        return ResponseEntity.ok(user);
+    }
+
 }
