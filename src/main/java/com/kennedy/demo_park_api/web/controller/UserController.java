@@ -3,6 +3,7 @@ package com.kennedy.demo_park_api.web.controller;
 import com.kennedy.demo_park_api.entities.User;
 import com.kennedy.demo_park_api.servicies.UserService;
 import com.kennedy.demo_park_api.web.dto.UserCreateDto;
+import com.kennedy.demo_park_api.web.dto.UserPasswordDto;
 import com.kennedy.demo_park_api.web.dto.UserResponseDto;
 import com.kennedy.demo_park_api.web.dto.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +40,10 @@ public class UserController {
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestBody User user){
-        user = userService.changePassword(id, user.getPassword());
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UserPasswordDto dto){
+        User user = userService.changePassword(id, dto.getCurrentPassword(), dto.getNewPassword(), dto.getConfirmPassword());
 
-        return ResponseEntity.ok(user);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
