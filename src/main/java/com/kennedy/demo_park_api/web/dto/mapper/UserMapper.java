@@ -6,6 +6,8 @@ import com.kennedy.demo_park_api.web.dto.UserResponseDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
+import java.util.List;
+
 public class UserMapper {
 
     public static User toUser(UserCreateDto createDto){
@@ -25,5 +27,11 @@ public class UserMapper {
         return mapper.map(user, UserResponseDto.class);
     }
 
+    public static List<UserResponseDto> toListDto(List<User> users){
 
+        return users
+                .stream()
+                .map(UserMapper::toUserResponse)
+                .toList();
+    }
 }
