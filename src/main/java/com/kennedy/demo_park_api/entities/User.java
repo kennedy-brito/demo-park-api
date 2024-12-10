@@ -1,9 +1,7 @@
 package com.kennedy.demo_park_api.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -11,8 +9,6 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@NoArgsConstructor
-
 @Entity
 @Table(name="users")
 public class User implements Serializable {
@@ -30,7 +26,7 @@ public class User implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 25)
-    private Role role;
+    private Role role = Role.ROLE_CLIENT;
 
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
