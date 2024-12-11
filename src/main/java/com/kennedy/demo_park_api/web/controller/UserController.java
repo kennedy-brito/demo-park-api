@@ -43,7 +43,6 @@ public class UserController {
                     )
 
             })
-
     @PostMapping
     public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserCreateDto createDto) {
         User user = userService.save(
@@ -55,6 +54,17 @@ public class UserController {
         );
     }
 
+    @Operation(summary = "Search user by id", description = "Search an existing user using his id",
+    responses = {
+            @ApiResponse(
+                    responseCode = "200", description = "resource located",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404", description = "resource not found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+            )
+    })
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
         User user = userService.findById(id);
