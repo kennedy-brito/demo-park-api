@@ -1,5 +1,6 @@
 package com.kennedy.demo_park_api.web.exception;
 
+import com.kennedy.demo_park_api.exception.UsernameUniqueViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,4 +33,23 @@ public class ApiExceptionHandler {
                                 result)
                 );
     }
+
+
+    @ExceptionHandler(UsernameUniqueViolationException.class)
+    public ResponseEntity<ErrorMessage> usernameUniqueViolationException(UsernameUniqueViolationException exc,
+                                                                        HttpServletRequest request){
+
+        log.error("API error - ", exc);
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(
+                        new ErrorMessage(
+                                request,
+                                HttpStatus.CONFLICT,
+                                exc.getMessage())
+                );
+    }
+
 }

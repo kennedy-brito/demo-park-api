@@ -2,7 +2,9 @@ package com.kennedy.demo_park_api.servicies;
 
 import com.kennedy.demo_park_api.entities.User;
 import com.kennedy.demo_park_api.repositories.UserRepository;
+import com.kennedy.demo_park_api.exception.UsernameUniqueViolationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +18,12 @@ public class UserService {
 
     @Transactional
     public User save(User user) {
-        return userRepository.save(user);
+        try{
+            return userRepository.save(user);
+        }catch (DataIntegrityViolationException e){
+            throw new UsernameUniqueViolationException(
+                    String.format("Username {%s} already exists.", user.getUsername()));
+        }
     }
 
     @Transactional(readOnly = true)
