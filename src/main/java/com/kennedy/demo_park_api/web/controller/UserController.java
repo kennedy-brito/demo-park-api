@@ -6,6 +6,12 @@ import com.kennedy.demo_park_api.web.dto.UserCreateDto;
 import com.kennedy.demo_park_api.web.dto.UserPasswordDto;
 import com.kennedy.demo_park_api.web.dto.UserResponseDto;
 import com.kennedy.demo_park_api.web.dto.mapper.UserMapper;
+import com.kennedy.demo_park_api.web.exception.ErrorMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Users", description = "Contains all operations related to resources for creating, deleting, and editing users.")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")
@@ -21,8 +28,24 @@ public class UserController {
 
     private final UserService userService;
 
+    @Operation(summary = "Create a new user", description = "Resource for creating a new user",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201", description = "resource created with success",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
+                    @ApiResponse(
+                            responseCode = "409", description = "user e-mail already in the system",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+
+                    @ApiResponse(
+                            responseCode = "422", description = "resource not processed because entry data was invalid",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+
+            })
+
     @PostMapping
-    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserCreateDto createDto){
+    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserCreateDto createDto) {
         User user = userService.save(
                 UserMapper.toUser(createDto)
         );
@@ -33,7 +56,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserResponseDto> getById(@PathVariable Long id){
+    public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
         User user = userService.findById(id);
 
         return ResponseEntity.ok(
@@ -41,14 +64,14 @@ public class UserController {
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @Valid @RequestBody UserPasswordDto dto){
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @Valid @RequestBody UserPasswordDto dto) {
         User user = userService.changePassword(id, dto.getCurrentPassword(), dto.getNewPassword(), dto.getConfirmPassword());
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> findAll(){
+    public ResponseEntity<List<UserResponseDto>> findAll() {
         List<User> users = userService.findAll();
 
         return ResponseEntity.ok(
