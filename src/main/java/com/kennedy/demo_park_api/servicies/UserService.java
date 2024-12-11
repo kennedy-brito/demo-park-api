@@ -2,6 +2,7 @@ package com.kennedy.demo_park_api.servicies;
 
 import com.kennedy.demo_park_api.entities.User;
 import com.kennedy.demo_park_api.exception.EntityNotFoundException;
+import com.kennedy.demo_park_api.exception.PasswordInvalidException;
 import com.kennedy.demo_park_api.repositories.UserRepository;
 import com.kennedy.demo_park_api.exception.UsernameUniqueViolationException;
 import lombok.RequiredArgsConstructor;
@@ -39,13 +40,13 @@ public class UserService {
     public User changePassword(Long id, String currentPassword, String newPassword, String confirmPassword) {
 
         if(! newPassword.equals(confirmPassword)){
-            throw new RuntimeException("new Password is not equal to confirmation Password");
+            throw new PasswordInvalidException("new Password is not equal to confirmation Password");
         }
 
         User user = findById(id);
 
         if (! user.getPassword().equals(currentPassword)){
-            throw new RuntimeException("Your password is wrong");
+            throw new PasswordInvalidException("Your password is wrong");
         }
 
         user.setPassword(newPassword);

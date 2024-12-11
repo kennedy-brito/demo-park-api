@@ -1,6 +1,7 @@
 package com.kennedy.demo_park_api.web.exception;
 
 import com.kennedy.demo_park_api.exception.EntityNotFoundException;
+import com.kennedy.demo_park_api.exception.PasswordInvalidException;
 import com.kennedy.demo_park_api.exception.UsernameUniqueViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +67,23 @@ public class ApiExceptionHandler {
                         new ErrorMessage(
                                 request,
                                 HttpStatus.NOT_FOUND,
+                                exc.getMessage())
+                );
+    }
+
+    @ExceptionHandler(PasswordInvalidException.class)
+    public ResponseEntity<ErrorMessage> passwordInvalidException(PasswordInvalidException exc,
+                                                                         HttpServletRequest request){
+
+        log.error("API error - ", exc);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(
+                        new ErrorMessage(
+                                request,
+                                HttpStatus.BAD_REQUEST,
                                 exc.getMessage())
                 );
     }
