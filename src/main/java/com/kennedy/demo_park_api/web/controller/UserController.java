@@ -73,6 +73,21 @@ public class UserController {
                 UserMapper.toUserResponse(user));
     }
 
+    @Operation(summary = "Update password", description = "Update password",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204", description = "Password successfully updated",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404", description = "resource not found",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Password doesn't match",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            })
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Void> updatePassword(@PathVariable Long id, @Valid @RequestBody UserPasswordDto dto) {
         User user = userService.changePassword(id, dto.getCurrentPassword(), dto.getNewPassword(), dto.getConfirmPassword());
