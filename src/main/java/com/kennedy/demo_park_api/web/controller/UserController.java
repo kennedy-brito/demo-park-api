@@ -8,6 +8,7 @@ import com.kennedy.demo_park_api.web.dto.UserResponseDto;
 import com.kennedy.demo_park_api.web.dto.mapper.UserMapper;
 import com.kennedy.demo_park_api.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -95,6 +96,15 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "List all users", description = "List all users",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Found users",
+                            content = @Content(
+                                        mediaType = "application/json",
+                                        array = @ArraySchema(schema = @Schema(implementation = UserResponseDto.class)))
+                    )
+            })
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> findAll() {
         List<User> users = userService.findAll();
