@@ -3,15 +3,11 @@ package com.kennedy.demo_park_api.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecureDigestAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -20,7 +16,7 @@ import java.util.Date;
 public class JwtUtils {
 
     public static final String JWT_BEARER = "Bearer ";
-    public static final String JWT_AUTHORIZATION = "Authorization ";
+    public static final String JWT_AUTHORIZATION = "Authorization";
     public static final String SECRET_KEY = "0123456789-0123456789-0123456789";
     public static final long EXPIRE_DAYS = 0L;
     public static final long EXPIRE_HOURS = 0L;
@@ -65,7 +61,8 @@ public class JwtUtils {
     private static Claims getClaimsFromToken(String token){
         try{
             return Jwts.parser()
-                    .verifyWith(generateKey()).build()
+                    .verifyWith(generateKey())
+                    .build()
                     .parseSignedClaims(refactorToken(token)).getPayload();
         }catch (JwtException e){
             log.error(String.format("Invalid Token %s", e.getMessage()));
