@@ -87,6 +87,10 @@ public class UserController {
                     @ApiResponse(
                             responseCode = "400", description = "Password doesn't match",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "422", description = "resource not processed because entry data was invalid",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
                     )
             })
     @PatchMapping(value = "/{id}")
