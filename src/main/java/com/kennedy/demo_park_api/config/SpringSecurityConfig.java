@@ -35,7 +35,18 @@ public class SpringSecurityConfig {
                         auth -> auth
                                 .requestMatchers(
                                         antMatcher(HttpMethod.POST, "/api/v1/users"),
-                                        antMatcher(HttpMethod.POST, "/api/v1/auth")
+                                        antMatcher(HttpMethod.POST, "/api/v1/auth"),
+                                        antMatcher(HttpMethod.POST, "/docs/index.html"),
+                                        antMatcher("/docs-park.html"),
+                                        antMatcher("/docs-park/**"),
+                                        antMatcher("/v3/api-docs/**"),
+                                        antMatcher("/swagger-ui-custom.html"),
+                                        antMatcher("/swagger-ui.html"),
+                                        antMatcher("/swagger-ui/**"),
+                                        antMatcher("/**.html"),
+                                        antMatcher("/webjars/**"),
+                                        antMatcher("/configuration/**"),
+                                        antMatcher("/swagger-resources/**")
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 ).sessionManagement(
