@@ -2,6 +2,7 @@ package com.kennedy.demo_park_api.config;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
+import com.kennedy.demo_park_api.jwt.JwtAuthenticationEntryPoint;
 import com.kennedy.demo_park_api.jwt.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +42,9 @@ public class SpringSecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAfter(
                         jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
+                )
+                .exceptionHandling(
+                        ex -> ex.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 )
                 .build();
     }
