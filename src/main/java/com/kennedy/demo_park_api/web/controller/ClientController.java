@@ -138,4 +138,15 @@ public class ClientController {
                 PageableMapper.toDto(clients)
         );
     }
+
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/details")
+    public ResponseEntity<ClientResponseDto> getDetails(@AuthenticationPrincipal JwtUserDetails userDetails){
+        Client client = clientService.findByUserId(userDetails.getId());
+
+        return ResponseEntity.ok(
+                ClientMapper.toDto(client)
+        );
+    }
 }
