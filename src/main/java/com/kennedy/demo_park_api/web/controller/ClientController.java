@@ -139,7 +139,18 @@ public class ClientController {
         );
     }
 
-
+    @Operation(summary = "Recuperate authenticated user data", description = "Requires a Bearer token. Access restricted to ADMIN",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "resource located",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403", description = "resource not permitted to ADMIN profile",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            })
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/details")
     public ResponseEntity<ClientResponseDto> getDetails(@AuthenticationPrincipal JwtUserDetails userDetails){
