@@ -2,6 +2,7 @@ package com.kennedy.demo_park_api.servicies;
 
 import com.kennedy.demo_park_api.entities.Client;
 import com.kennedy.demo_park_api.exception.CpfUniqueViolationException;
+import com.kennedy.demo_park_api.exception.EntityNotFoundException;
 import com.kennedy.demo_park_api.repositories.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,5 +25,13 @@ public class ClientService {
                     String.format("CPF '%s' cannot be registered, it already exists in the system", client.getCpf())
             );
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Client findById(Long id) {
+        return clientRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(
+                        String.format("Client with id='%s' not found in the system.", id))
+        );
     }
 }

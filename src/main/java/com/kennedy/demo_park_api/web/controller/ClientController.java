@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -59,6 +60,17 @@ public class ClientController {
         clientService.save(client);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
+                ClientMapper.toDto(client)
+        );
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientResponseDto> getById(@PathVariable Long id){
+        Client client = clientService.findById(id);
+
+        return ResponseEntity.ok(
                 ClientMapper.toDto(client)
         );
     }
