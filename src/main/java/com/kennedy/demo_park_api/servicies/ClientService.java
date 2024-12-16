@@ -6,8 +6,11 @@ import com.kennedy.demo_park_api.exception.EntityNotFoundException;
 import com.kennedy.demo_park_api.repositories.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -33,5 +36,10 @@ public class ClientService {
                 () -> new EntityNotFoundException(
                         String.format("Client with id='%s' not found in the system.", id))
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<Client> findAll(Pageable pageable) {
+        return clientRepository.findAll();
     }
 }
