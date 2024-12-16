@@ -86,8 +86,7 @@ public class UserController {
             security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(
-                            responseCode = "204", description = "Password successfully updated",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))
+                            responseCode = "204", description = "Password successfully updated"
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Password doesn't match",
@@ -95,10 +94,6 @@ public class UserController {
                     ),
                     @ApiResponse(
                             responseCode = "403", description = "User doesn't have permission to access resource",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "404", description = "resource not found",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
                     ),
                     @ApiResponse(
