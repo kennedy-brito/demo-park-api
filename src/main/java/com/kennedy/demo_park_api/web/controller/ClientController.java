@@ -2,12 +2,15 @@ package com.kennedy.demo_park_api.web.controller;
 
 import com.kennedy.demo_park_api.entities.Client;
 import com.kennedy.demo_park_api.jwt.JwtUserDetails;
+import com.kennedy.demo_park_api.repositories.projection.ClientProjection;
 import com.kennedy.demo_park_api.servicies.ClientService;
 import com.kennedy.demo_park_api.servicies.UserService;
 import com.kennedy.demo_park_api.web.dto.ClientCreateDto;
 import com.kennedy.demo_park_api.web.dto.ClientResponseDto;
+import com.kennedy.demo_park_api.web.dto.PageableDto;
 import com.kennedy.demo_park_api.web.dto.UserResponseDto;
 import com.kennedy.demo_park_api.web.dto.mapper.ClientMapper;
+import com.kennedy.demo_park_api.web.dto.mapper.PageableMapper;
 import com.kennedy.demo_park_api.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -94,9 +97,11 @@ public class ClientController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
-    public ResponseEntity<Page<Client>> findAll(Pageable pageable){
-        Page<Client> clients = clientService.findAll(pageable);
+    public ResponseEntity<PageableDto> findAll(Pageable pageable){
+        Page<ClientProjection> clients = clientService.findAll(pageable);
 
-        return ResponseEntity.ok(clients);
+        return ResponseEntity.ok(
+                PageableMapper.toDto(clients)
+        );
     }
 }
