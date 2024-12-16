@@ -1,5 +1,6 @@
 package com.kennedy.demo_park_api.web.exception;
 
+import com.kennedy.demo_park_api.exception.CpfUniqueViolationException;
 import com.kennedy.demo_park_api.exception.EntityNotFoundException;
 import com.kennedy.demo_park_api.exception.PasswordInvalidException;
 import com.kennedy.demo_park_api.exception.UsernameUniqueViolationException;
@@ -39,8 +40,11 @@ public class ApiExceptionHandler {
     }
 
 
-    @ExceptionHandler(UsernameUniqueViolationException.class)
-    public ResponseEntity<ErrorMessage> usernameUniqueViolationException(UsernameUniqueViolationException exc,
+    @ExceptionHandler({
+            UsernameUniqueViolationException.class,
+            CpfUniqueViolationException.class
+    })
+    public ResponseEntity<ErrorMessage> UniqueViolationException(RuntimeException exc,
                                                                         HttpServletRequest request){
 
         log.error("API error - ", exc);
