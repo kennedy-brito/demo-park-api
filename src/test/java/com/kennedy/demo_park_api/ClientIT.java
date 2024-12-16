@@ -214,4 +214,36 @@ public class ClientIT {
 
     }
 
+    @Test
+    public void searchClient_withTokenDataOfClient_ReturnClientWithStatus200(){
+        ClientResponseDto responseBody = testClient
+                .get()
+                .uri(base_url + "/clients/details")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"bia@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ClientResponseDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getId()).isEqualTo(10);
+        Assertions.assertThat(responseBody.getName()).isEqualTo("Bianca Silva");
+        Assertions.assertThat(responseBody.getCpf()).isEqualTo("02268984079");
+    }
+
+    @Test
+    public void searchClient_withTokenDataOfAdmin_ReturnErrorMessageWithStatus403(){
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri(base_url + "/clients/details")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"ana@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(HttpStatus.FORBIDDEN.value());
+
+    }
 }
