@@ -100,6 +100,35 @@ public class ClientController {
         );
     }
 
+    @Operation(
+            summary = "get a list of clients",
+            description = "Request requires a Bearer token. Access restricted to role='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
+            parameters = {
+                    @Parameter(in = ParameterIn.QUERY, name="page",
+                        content = @Content(schema = @Schema(type = "integer", defaultValue = "0")),
+                        description = "Represents the returned page"),
+                    @Parameter(in = ParameterIn.QUERY, name="size",
+                            content = @Content(schema = @Schema(type = "integer", defaultValue = "5")),
+                            description = "Represents the total of elements per page"),
+                    @Parameter(in = ParameterIn.QUERY, name="sort", hidden = true,
+                            content = @Content(schema = @Schema(type = "string", defaultValue = "name,id,asc",
+                            description = "Represents the sorting criteria. Supports multiple criteria")))
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Resource found with success",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = ClientResponseDto.class)))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403", description = "Resource isn't accessible to profile 'CLIENT'",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+
+            }
+    )
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
     public ResponseEntity<PageableDto> findAll(@Parameter(hidden = true) @PageableDefault(size = 5, sort = {"name"}) Pageable pageable){
