@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity
-@Table(name = "clients")
+@Table(name = "tb_clients")
 @EntityListeners(AuditingEntityListener.class)
 public class Client {
 
