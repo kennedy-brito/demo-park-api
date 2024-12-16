@@ -120,4 +120,49 @@ public class ClientIT {
         Assertions.assertThat(responseBody.getStatus()).isEqualTo(HttpStatus.FORBIDDEN.value());
 
     }
+
+    @Test
+    public void searchClient_withExistingIdWithAdminProfile_ReturnClientWithStatus200(){
+        ClientResponseDto responseBody = testClient
+                .get()
+                .uri(base_url + "/clients/10")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"ana@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ClientResponseDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getId()).isEqualTo(10);
+    }
+
+    @Test
+    public void searchClient_withNonExistingIdWithAdminProfile_ReturnErrorMessageWithStatus404(){
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri(base_url + "/clients/0")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"ana@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    public void searchClient_withExistingIdWithClientProfile_ReturnErrorMessageWithStatus403(){
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri(base_url + "/clients/10")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"bia@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
 }
