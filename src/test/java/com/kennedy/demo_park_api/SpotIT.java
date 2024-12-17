@@ -1,7 +1,9 @@
 package com.kennedy.demo_park_api;
 
 import com.kennedy.demo_park_api.web.dto.SpotCreateDto;
+import com.kennedy.demo_park_api.web.dto.SpotResponseDto;
 import com.kennedy.demo_park_api.web.exception.ErrorMessage;
+import jakarta.validation.constraints.AssertTrue;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,4 +79,37 @@ public class SpotIT {
                 .jsonPath("path").isEqualTo(base_url + "/spots");
 
     }
+
+    @Test
+    public void searchSpot_withExistingCode_ReturnSpotStatus200(){
+        SpotResponseDto responseBody = testClient.get()
+                .uri(base_url + "/spots/A-01")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(SpotResponseDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getId()).isEqualTo(10);
+        Assertions.assertThat(responseBody.getCode()).isEqualTo("A-01");
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo("FREE");
+
+    }
+
+    @Test
+    public void searchSpot_withNonExistingCode_ReturnErrorMessageStatus404(){
+        ErrorMessage responseBody = testClient.get()
+                .uri(base_url + "/spots/A-00")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();;
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+
+    }
+
 }
