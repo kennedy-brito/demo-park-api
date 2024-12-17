@@ -49,4 +49,11 @@ public class ClientService {
     public Client findByUserId(Long id) {
         return clientRepository.findByUserId(id);
     }
+
+    public Client findByCpf(String cpf) {
+        return clientRepository.findByCpf(cpf).orElseThrow(
+                () -> new EntityNotFoundException(
+                        String.format("Client with cpf='%s' not found in the system.", cpf))
+        );
+    }
 }

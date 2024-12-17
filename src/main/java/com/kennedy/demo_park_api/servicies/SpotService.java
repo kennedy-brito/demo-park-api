@@ -32,4 +32,12 @@ public class SpotService {
                         String.format("Spot with code '%s' wasn't found.", code))
         );
     }
+
+    @Transactional(readOnly = true)
+    public Spot searchForFreeSpot() {
+        return spotRepository.findFirstByStatus("FREE").orElseThrow(
+                () -> new EntityNotFoundException(
+                        "A FREE Spot wasn't found.")
+        );
+    }
 }
