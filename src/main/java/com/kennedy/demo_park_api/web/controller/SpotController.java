@@ -38,6 +38,9 @@ public class SpotController {
                             responseCode = "201", description = "resource created with success",
                             headers = @Header(name = HttpHeaders.LOCATION, description = "Resource URL was created")),
                     @ApiResponse(
+                            responseCode = "403", description = "user doesn't have permission to access resource.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(
                             responseCode = "409", description = "spot code already in the system",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(
@@ -67,6 +70,9 @@ public class SpotController {
                             responseCode = "200", description = "resource located",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = SpotResponseDto.class))
                     ),
+                    @ApiResponse(
+                            responseCode = "403", description = "user doesn't have permission to access resource.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(
                             responseCode = "404", description = "spot not found",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
