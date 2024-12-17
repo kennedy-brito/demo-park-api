@@ -1,9 +1,6 @@
 package com.kennedy.demo_park_api.web.exception;
 
-import com.kennedy.demo_park_api.exception.CpfUniqueViolationException;
-import com.kennedy.demo_park_api.exception.EntityNotFoundException;
-import com.kennedy.demo_park_api.exception.PasswordInvalidException;
-import com.kennedy.demo_park_api.exception.UsernameUniqueViolationException;
+import com.kennedy.demo_park_api.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,7 +39,8 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler({
             UsernameUniqueViolationException.class,
-            CpfUniqueViolationException.class
+            CpfUniqueViolationException.class,
+            CodeUniqueViolationException.class
     })
     public ResponseEntity<ErrorMessage> UniqueViolationException(RuntimeException exc,
                                                                         HttpServletRequest request){
