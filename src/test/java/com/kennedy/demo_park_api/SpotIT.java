@@ -37,6 +37,21 @@ public class SpotIT {
     }
 
     @Test
+    public void createSpot_withRoleClient_ReturnErrorMessageStatus403(){
+        testClient.post()
+                .uri(base_url + "/spots")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@gmail.com", "123456"))
+                .bodyValue(new SpotCreateDto("A-05", "FREE"))
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.FORBIDDEN)
+                .expectBody()
+                .jsonPath("status").isEqualTo(HttpStatus.FORBIDDEN.value())
+                .jsonPath("method").isEqualTo("POST")
+                .jsonPath("path").isEqualTo(base_url + "/spots");
+    }
+
+    @Test
     public void createSpot_withRegisteredCode_ReturnErrorMessageStatus409(){
         testClient.post()
             .uri(base_url + "/spots")
@@ -95,6 +110,19 @@ public class SpotIT {
         Assertions.assertThat(responseBody.getCode()).isEqualTo("A-01");
         Assertions.assertThat(responseBody.getStatus()).isEqualTo("FREE");
 
+    }
+
+    @Test
+    public void searchSpot_withRoleClient_ReturnErrorMessageStatus403(){
+        testClient.get()
+                .uri(base_url + "/spots/A-01")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.FORBIDDEN)
+                .expectBody()
+                .jsonPath("status").isEqualTo(HttpStatus.FORBIDDEN.value())
+                .jsonPath("method").isEqualTo("GET")
+                .jsonPath("path").isEqualTo(base_url + "/spots/A-01");
     }
 
     @Test
