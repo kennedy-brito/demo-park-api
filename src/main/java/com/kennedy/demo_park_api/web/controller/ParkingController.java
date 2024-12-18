@@ -2,6 +2,7 @@ package com.kennedy.demo_park_api.web.controller;
 
 import com.kennedy.demo_park_api.entities.ClientSpot;
 import com.kennedy.demo_park_api.entities.Spot;
+import com.kennedy.demo_park_api.jwt.JwtUserDetails;
 import com.kennedy.demo_park_api.repositories.projection.ClientSpotProjection;
 import com.kennedy.demo_park_api.servicies.ClientSpotService;
 import com.kennedy.demo_park_api.servicies.ParkingService;
@@ -26,6 +27,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -119,6 +121,17 @@ public class ParkingController {
             @PageableDefault(size = 5, sort = "entryDate", direction = Sort.Direction.ASC) Pageable pageable){
 
         Page<ClientSpotProjection> projection = clientSpotService.findAllByClientCpf(cpf, pageable);
+        PageableDto dto = PageableMapper.toDto(projection);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping()
+    public ResponseEntity<PageableDto> findAllParkingOfClient(
+            @AuthenticationPrincipal JwtUserDetails user,
+            @PageableDefault(size = 5, sort = "entryDate", direction = Sort.Direction.ASC) Pageable pageable){
+
+        Page<ClientSpotProjection> projection = clientSpotService.findAllByUserId(user.getId(), pageable);
         PageableDto dto = PageableMapper.toDto(projection);
         return ResponseEntity.ok(dto);
     }
