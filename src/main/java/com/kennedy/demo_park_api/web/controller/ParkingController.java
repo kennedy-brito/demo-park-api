@@ -2,11 +2,14 @@ package com.kennedy.demo_park_api.web.controller;
 
 import com.kennedy.demo_park_api.entities.ClientSpot;
 import com.kennedy.demo_park_api.entities.Spot;
+import com.kennedy.demo_park_api.repositories.projection.ClientSpotProjection;
 import com.kennedy.demo_park_api.servicies.ClientSpotService;
 import com.kennedy.demo_park_api.servicies.ParkingService;
+import com.kennedy.demo_park_api.web.dto.PageableDto;
 import com.kennedy.demo_park_api.web.dto.ParkingCreateDto;
 import com.kennedy.demo_park_api.web.dto.ParkingResponseDto;
 import com.kennedy.demo_park_api.web.dto.mapper.ClientSpotMapper;
+import com.kennedy.demo_park_api.web.dto.mapper.PageableMapper;
 import com.kennedy.demo_park_api.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -18,6 +21,7 @@ import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
@@ -108,4 +112,14 @@ public class ParkingController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<PageableDto> findAllParkingByCpf(
+            @PathVariable String cpf,
+            @PageableDefault(size = 5, sort = "entryDate", direction = Sort.Direction.ASC) Pageable pageable){
+
+        Page<ClientSpotProjection> projection = clientSpotService.findAllByClientCpf(cpf, pageable);
+        PageableDto dto = PageableMapper.toDto(projection);
+        return ResponseEntity.ok(dto);
+    }
 }

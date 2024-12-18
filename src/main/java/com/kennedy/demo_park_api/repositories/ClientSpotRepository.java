@@ -1,8 +1,11 @@
 package com.kennedy.demo_park_api.repositories;
 
 import com.kennedy.demo_park_api.entities.ClientSpot;
+import com.kennedy.demo_park_api.repositories.projection.ClientSpotProjection;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.awt.print.Pageable;
 import java.util.Optional;
 
 public interface ClientSpotRepository extends JpaRepository<ClientSpot, Long> {
@@ -10,4 +13,5 @@ public interface ClientSpotRepository extends JpaRepository<ClientSpot, Long> {
 
     long countByClientCpfAndEntryDateIsNotNull(String cpf);
 
+    Page<ClientSpotProjection> findAllByClientCpf(String cpf, Pageable pageable);
 }

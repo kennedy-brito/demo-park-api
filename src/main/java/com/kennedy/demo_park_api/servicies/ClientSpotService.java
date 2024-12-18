@@ -4,9 +4,13 @@ package com.kennedy.demo_park_api.servicies;
 import com.kennedy.demo_park_api.entities.ClientSpot;
 import com.kennedy.demo_park_api.exception.EntityNotFoundException;
 import com.kennedy.demo_park_api.repositories.ClientSpotRepository;
+import com.kennedy.demo_park_api.repositories.projection.ClientSpotProjection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.awt.print.Pageable;
 
 @RequiredArgsConstructor
 @Service
@@ -31,5 +35,9 @@ public class ClientSpotService {
 
     public long getTotalParkingVisits(String cpf) {
         return clientSpotRepository.countByClientCpfAndEntryDateIsNotNull(cpf);
+    }
+
+    public Page<ClientSpotProjection> findAllByClientCpf(String cpf, Pageable pageable) {
+        return clientSpotRepository.findAllByClientCpf(cpf, pageable);
     }
 }
