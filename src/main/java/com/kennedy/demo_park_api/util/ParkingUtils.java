@@ -13,8 +13,9 @@ public class ParkingUtils {
     
     private static final double FIRST_15_MINUTES = 5.00;
     private static final double FIRST_60_MINUTES = 9.25;
-    private static final double ADITIONAL_15_MINUTES = 1.75;
-
+    private static final double ADDITIONAL_15_MINUTES = 1.75;
+    private static final double DISCOUNT = 0.30;
+    
     public static String generateReceipt(){
         LocalDateTime date = LocalDateTime.now();
         String receipt = date.toString().substring(0,19);
@@ -45,12 +46,28 @@ public class ParkingUtils {
             minutes -= 60;
 
             while (minutes > 0){
-                total += ADITIONAL_15_MINUTES;
+                total += ADDITIONAL_15_MINUTES;
                 minutes -= 15;
             }
 
         }
 
         return new BigDecimal(total).setScale(2, RoundingMode.HALF_EVEN);
+    }
+
+    public static BigDecimal calculateDiscount(BigDecimal price, long numberOfTimes) {
+
+        // Complete o código com a sua lógica
+        BigDecimal discount = new BigDecimal(0);
+        if(numberOfTimes > 0 && numberOfTimes%10 == 0){
+
+            discount =
+                    price.multiply(
+                            new BigDecimal(DISCOUNT)
+                    );
+        }
+
+
+        return discount.setScale(2, RoundingMode.HALF_EVEN);
     }
 }
