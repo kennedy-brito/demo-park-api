@@ -6,7 +6,6 @@ import com.kennedy.demo_park_api.entities.ClientSpot;
 import com.kennedy.demo_park_api.entities.Spot;
 import com.kennedy.demo_park_api.util.ParkingUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

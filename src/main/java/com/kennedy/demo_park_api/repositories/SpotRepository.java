@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface SpotRepository extends JpaRepository<Spot, Long> {
     Optional<Spot> findByCode(String code);
 
-    Optional<Spot> findFirstByStatus(String free);
+    Optional<Spot> findFirstByStatus(Spot.SpotStatus free);
 }

@@ -33,9 +33,9 @@ public class SpotService {
         );
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Spot searchForFreeSpot() {
-        return spotRepository.findFirstByStatus("FREE").orElseThrow(
+        return spotRepository.findFirstByStatus(Spot.SpotStatus.FREE).orElseThrow(
                 () -> new EntityNotFoundException(
                         "A FREE Spot wasn't found.")
         );
