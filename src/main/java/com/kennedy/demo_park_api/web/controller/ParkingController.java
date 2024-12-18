@@ -2,6 +2,7 @@ package com.kennedy.demo_park_api.web.controller;
 
 import com.kennedy.demo_park_api.entities.ClientSpot;
 import com.kennedy.demo_park_api.entities.Spot;
+import com.kennedy.demo_park_api.servicies.ClientSpotService;
 import com.kennedy.demo_park_api.servicies.ParkingService;
 import com.kennedy.demo_park_api.web.dto.ParkingCreateDto;
 import com.kennedy.demo_park_api.web.dto.ParkingResponseDto;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +32,7 @@ import java.net.URI;
 public class ParkingController {
 
     private final ParkingService parkingService;
+    private final ClientSpotService clientSpotService;
 
     @Operation(summary = "Check-in in a parking spot",
             description = "Resource for check-in in a parking spot. " + "Request restricted to authenticated user. Access restricted to Role='ADMIN'",
@@ -80,5 +83,15 @@ public class ParkingController {
     public ResponseEntity<String > check(@RequestBody @Valid ParkingCreateDto dto){
 
         return ResponseEntity.ok().body("Entrou");
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @GetMapping("/check-in/{receipt}")
+    public ResponseEntity<ParkingResponseDto> findByReceipt(@PathVariable String receipt){
+        ClientSpot clientSpot = clientSpotService.findCheckInReceipt(receipt);
+
+        return ResponseEntity.ok(
+                ClientSpotMapper.toDto(clientSpot)
+        );
     }
 }
