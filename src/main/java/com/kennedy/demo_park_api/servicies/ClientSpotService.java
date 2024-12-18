@@ -28,4 +28,8 @@ public class ClientSpotService {
                 )
         );
     }
+
+    public long getTotalParkingVisits(String cpf) {
+        return clientSpotRepository.countByClientCpfAndEntryDateIsNotNull(cpf);
+    }
 }

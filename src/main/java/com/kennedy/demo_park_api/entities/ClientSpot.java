@@ -51,7 +51,7 @@ public class ClientSpot {
     private LocalDateTime exitDate;
 
     @Column(name = "price", columnDefinition = "DECIMAL(7,2)")
-    private BigDecimal value;
+    private BigDecimal price;
 
     @Column(name = "discount", columnDefinition = "DECIMAL(7,2)")
     private BigDecimal discount;

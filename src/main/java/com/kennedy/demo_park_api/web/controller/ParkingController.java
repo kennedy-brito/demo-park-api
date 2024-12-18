@@ -18,12 +18,15 @@ import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.awt.print.Pageable;
 import java.net.URI;
 
 @RequiredArgsConstructor
@@ -94,4 +97,15 @@ public class ParkingController {
                 ClientSpotMapper.toDto(clientSpot)
         );
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/check-out/{receipt}")
+    public ResponseEntity<ParkingResponseDto> checkOut(@PathVariable String receipt){
+        ClientSpot clientSpot = parkingService.checkOut(receipt);
+
+        return ResponseEntity.ok(
+                ClientSpotMapper.toDto(clientSpot)
+        );
+    }
+
 }
