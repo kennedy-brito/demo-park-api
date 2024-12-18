@@ -129,4 +129,57 @@ public class ParkingIT {
                 .jsonPath("method").isEqualTo("POST");
     }
 
+    @Sql(scripts = "/sql/parking/parking-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Test
+    public void findCheckIn_WithAdminRole_ReturnDataStatus200(){
+
+        testClient.get()
+                .uri(base_url + "/parking/check-in/{receipt}", "20230313-101300")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com.br", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("plate").isEqualTo("FIT-1020")
+                .jsonPath("brand").isEqualTo("FIAT")
+                .jsonPath("model").isEqualTo("PALIO")
+                .jsonPath("color").isEqualTo("VERDE")
+                .jsonPath("clientCpf").isEqualTo("98401203015")
+                .jsonPath("receipt").isEqualTo("20230313-101300")
+                .jsonPath("entryDate").isEqualTo("2023-03-13 10:15:00")
+                .jsonPath("spotCode").isEqualTo("A-01");
+    }
+
+    @Sql(scripts = "/sql/parking/parking-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Test
+    public void findCheckIn_WithClientRole_ReturnDataStatus200(){
+
+        testClient.get()
+                .uri(base_url + "/parking/check-in/{receipt}", "20230313-101300")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@email.com.br", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("plate").isEqualTo("FIT-1020")
+                .jsonPath("brand").isEqualTo("FIAT")
+                .jsonPath("model").isEqualTo("PALIO")
+                .jsonPath("color").isEqualTo("VERDE")
+                .jsonPath("clientCpf").isEqualTo("98401203015")
+                .jsonPath("receipt").isEqualTo("20230313-101300")
+                .jsonPath("entryDate").isEqualTo("2023-03-13 10:15:00")
+                .jsonPath("spotCode").isEqualTo("A-01");
+    }
+    @Sql(scripts = "/sql/parking/parking-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Test
+    public void findCheckIn_WithNonExistingReceipt_ReturnErrorMessageStatus404(){
+
+        testClient.get()
+                .uri(base_url + "/parking/check-in/{receipt}", "20230313-99999")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@email.com.br", "123456"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath("status").isEqualTo("404")
+                .jsonPath("path").isEqualTo(base_url + "/parking/check-in/20230313-99999")
+                .jsonPath("method").isEqualTo("GET");
+    }
 }
