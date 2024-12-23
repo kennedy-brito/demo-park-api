@@ -7,10 +7,10 @@ import com.kennedy.demo_park_api.repositories.ClientSpotRepository;
 import com.kennedy.demo_park_api.repositories.projection.ClientSpotProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 
 @RequiredArgsConstructor
 @Service
